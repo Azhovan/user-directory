@@ -11,6 +11,7 @@ namespace App\UserDirectory\Services\User;
 use App\UserDirectory\Exceptions\Validator\UserException;
 use App\UserDirectory\Models\User;
 use App\UserDirectory\Services\IService;
+use Illuminate\Support\Facades\Auth;
 
 class UserService implements IService
 {
@@ -39,6 +40,27 @@ class UserService implements IService
         return self::$instance;
     }
 
+    /**
+     * get all information about user
+     * @param bool $loadFromCache decide to load data from memory or fetch it from Database
+     * @return mixed
+     */
+    public function getCurrentUser($loadFromCache = true)
+    {
+        if (!$loadFromCache) {
+            $user = User::find(Auth::user()->id);
+            return json_decode($user);
+        }
+
+        return Auth::user();
+
+    }
+
+    public function getUserId()
+    {
+        return Auth::id();
+    }
+
 
     /**
      * create new user in system
@@ -46,16 +68,60 @@ class UserService implements IService
      * @return mixed
      * @throws UserException
      */
-    public function createUser($data)
+    public function createUser($data = array())
     {
-        if (empty($data))
-            throw new UserException("Cannot create user. data is null");
+        if (empty($data)) {
 
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'age' => $data['age'],
-            'password' => bcrypt($data['password']),
-        ]);
+            throw new UserException("Cannot create user. data is null");
+            // log data can happen here
+        }
+
+        try {
+
+            return User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'age' => $data['age'],
+                'password' => bcrypt($data['password']),
+            ]);
+
+        } catch (UserException $exception) {
+
+            throw $exception;
+        }
+
+
+    }
+
+    /**
+     * update user details
+     * @param array $data
+     * @param bool $updatePassword
+     * @return mixed
+     * @throws UserException
+     */
+    public function updateUser($data = array(), $updatePassword = false)
+    {
+        if (empty($data)) {
+
+            throw new UserException('Cannot update user. data is null');
+            // log data can happen here
+        }
+
+        if ($updatePassword) {
+
+            $data['password'] = bcrypt($data['password']);
+
+        }
+
+        try {
+
+            return User::where('id', Auth::id())->update($data);
+
+        } catch (UserException $exception) {
+
+            throw  $exception;
+
+        }
     }
 }

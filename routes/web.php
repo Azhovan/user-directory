@@ -15,19 +15,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
 Auth::routes();
-
-// Route::get('/home', 'HomeController@index')->name('home')->middleware('auth');
-// Route::get('/profile', 'HomeController@index')->name('home')->middleware('auth');
-
-/*Route::middleware(['auth'])->group(function () {
-
-    Route::get('/', function () {
-        // Uses first & second Middleware
-    });
-
-
-});*/
 
 
 Route::group(['prefix' => 'home', 'middleware' => ['before' => 'auth']], function () {
@@ -36,7 +25,6 @@ Route::group(['prefix' => 'home', 'middleware' => ['before' => 'auth']], functio
         'uses' => 'HomeController@index',
         'as' => 'home'
     ]);
-
 
     Route::group(['prefix' => 'profile'], function () {
 
@@ -48,6 +36,11 @@ Route::group(['prefix' => 'home', 'middleware' => ['before' => 'auth']], functio
         Route::get('/edit', [
             'uses' => 'Profile\ProfileController@edit',
             'as' => 'profile.edit'
+        ]);
+
+        Route::post('/update', [
+            'uses' => 'Profile\ProfileController@update',
+            'as' => 'profile.update'
         ]);
 
     });

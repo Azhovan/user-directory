@@ -12,6 +12,11 @@ namespace App\UserDirectory\Services\Validator;
 class ValidateFactory implements IFactory
 {
 
+    /**
+     * validator factory class
+     * @param $builder IValidate
+     * @return mixed
+     */
     public static function validate($builder)
     {
         return $builder->validator();

@@ -2,7 +2,7 @@
 
 return [
     'dashboard' => 'Dashboard',
-    'title' => 'Welcome to your space !',
+    'title' => 'Welcome to your space ',
     'menu_item' => 'Menu',
     'logout' => 'Logout',
     'edit_profile' => 'Edit Your Profile',
