@@ -14,5 +14,6 @@ class Messages
 
     const SUCCESS_UPDATE = "Update Successfully Done .";
     const ERROR_UPDATE = "Update Faild. Please Check Inputs";
+    const ERROR_REQUEST = 1;
 
 }

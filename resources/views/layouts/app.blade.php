@@ -57,6 +57,9 @@
 
                             <ul class="dropdown-menu" role="menu">
 
+                                <li>
+                                    <a href="{{ route('home') }}">@lang('dashboard.home')</a>
+                                </li>
 
                                 <li>
                                     <a href="{{ route('profile.view') }}">@lang('dashboard.view_profile')</a>
@@ -91,8 +94,18 @@
 </div>
 
 <!-- Scripts -->
+<script>
+    // global app config
+    var config = {
+        routes: "{{ route('search') }}"
+
+    };
+</script>
 <script src="{{ asset('js/app.js') }}"></script>
 <script src="{{ asset('js/jquery-3.1.1.min.js') }}"></script>
 <script src="{{ asset('js/mdb.min.js') }}"></script>
+<script src="{{ asset('js/user_directory.js') }}"></script>
+
+
 </body>
 </html>

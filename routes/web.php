@@ -26,6 +26,13 @@ Route::group(['prefix' => 'home', 'middleware' => ['before' => 'auth']], functio
         'as' => 'home'
     ]);
 
+
+    Route::post('/search', [
+        'uses' => 'HomeController@search',
+        'as' => 'search'
+    ]);
+
+
     Route::group(['prefix' => 'profile'], function () {
 
         Route::get('/view', [
@@ -42,6 +49,7 @@ Route::group(['prefix' => 'home', 'middleware' => ['before' => 'auth']], functio
             'uses' => 'Profile\ProfileController@update',
             'as' => 'profile.update'
         ]);
+
 
     });
 

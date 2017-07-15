@@ -2,6 +2,8 @@
 
 return [
     'dashboard' => 'Dashboard',
+    'home' => 'Home',
+    'search' => 'Search',
     'title' => 'Welcome to your space ',
     'menu_item' => 'Menu',
     'logout' => 'Logout',

@@ -22,12 +22,17 @@ class UpdateElastic implements ShouldQueue
      */
     public function handle(UserCreateOrUpdate $event)
     {
-        //print_r($event->userProfile['id']);
-        // return false;
+        $model = $event->model;
+
+        $model::where('id', $event->id)->first()->document()->save();
     }
 
+    /**
+     * @param UserCreateOrUpdate $event
+     * @param $exception
+     */
     public function failed(UserCreateOrUpdate $event, $exception)
     {
-        //TODO :
+        // does need to implement
     }
 }

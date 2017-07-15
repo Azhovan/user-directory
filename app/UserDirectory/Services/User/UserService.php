@@ -9,12 +9,15 @@
 namespace App\UserDirectory\Services\User;
 
 use App\Events\UserCreateOrUpdate;
+use App\UserDirectory\Exceptions\Validator\ElasticException;
 use App\UserDirectory\Exceptions\Validator\UserException;
 use App\UserDirectory\Models\User;
+use App\UserDirectory\Services\Elastic\Elastic;
 use App\UserDirectory\Services\IService;
+use App\UserDirectory\Services\IUser;
 use Illuminate\Support\Facades\Auth;
 
-class UserService implements IService
+class UserService implements IService, IUser
 {
 
     /**
@@ -86,11 +89,10 @@ class UserService implements IService
                 'password' => bcrypt($data['password']),
             ]);
 
-            // Update Elastic search with new entry
-            $result->document()->save();
-
+            // Update Elastic search
             // broadcast event
-            // event(new UserCreateOrUpdate($result));
+            $model = (new SearchableModelFactory())->getModel(self::ELASTIC_MODEL);
+            event(new UserCreateOrUpdate($model, $result->id));
 
             return $result;
 
@@ -128,10 +130,9 @@ class UserService implements IService
             $result = User::where('id', Auth::id())->update($data);
 
             // Update Elastic search
-            User::where('id', Auth::id())->first()->document()->save();
-
-            // broadcast event if need
-            // event(new UserCreateOrUpdate($result));
+            // broadcast event
+            $model = (new SearchableModelFactory())->getModel(self::ELASTIC_MODEL);
+            event(new UserCreateOrUpdate($model, Auth::id()));
 
             return $result;
 
@@ -141,4 +142,71 @@ class UserService implements IService
 
         }
     }
+
+    public function getUserById($userId)
+    {
+
+    }
+
+
+    /**
+     * search against all fields in elastic
+     * @param $term
+     * @return mixed
+     * @throws ElasticException
+     * @internal param $model
+     */
+    public function search($term)
+    {
+        try {
+
+            $model = $this->getSearchModel();
+
+            // search against all three fields
+            $results = $model::search()->multiMatch([
+                IUser::FIELD_NAME,
+                IUser::FIELD_EMAIL,
+                IUser::FIELD_AGE
+            ], $term)->getRaw();
+
+            // put data into elastic class
+            $elasticObject = new Elastic($results);
+
+            // there is no match
+            if ($elasticObject->totalHits() == 0) {
+                return false;
+            }
+
+            // loop all search results
+            $searchResult = [];
+            foreach ($elasticObject->hits() as $row) {
+
+                $searchResult[] = [
+                    'id' => $row['id'],
+                    'name' => $row['name'],
+                    'email' => $row['email'],
+                    'age' => $row['age'],
+                    'score' => $row['_score']
+                ];
+
+            }
+
+            return json_encode($searchResult);
+
+        } catch (ElasticException $exception) {
+            throw $exception;
+        }
+
+
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getSearchModel()
+    {
+        return (new SearchableModelFactory())->getModel(self::ELASTIC_MODEL);
+    }
+
+
 }

@@ -2,18 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\UserDirectory\Config\Messages;
+use App\UserDirectory\Services\User\UserService;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     */
-    public function __construct()
-    {
-        // $this->middleware('auth');
-    }
+
 
     /**
      * Show the application dashboard.
@@ -41,5 +36,18 @@ class HomeController extends Controller
     public function edit()
     {
         return view('dashboard.profile.edit');
+    }
+
+    public function search(Request $request)
+    {
+        $param = $request->all();
+
+        if (!isset($param['term']) || empty($param['term'])) {
+            return Messages::ERROR_REQUEST;
+        }
+
+        $result = UserService::getInstance()->search($param['term']);
+        return ($result);
+
     }
 }

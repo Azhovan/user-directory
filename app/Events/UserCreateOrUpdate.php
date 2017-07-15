@@ -14,24 +14,27 @@ class UserCreateOrUpdate
 
 
     /**
-     * @var Object
-     * to hold user profile information
+     * @var string
+     * the model which event occur on that
      */
-    public $userProfile = [];
+    public $model;
+
+    /**
+     * identifier of model in database
+     * @var integer
+     */
+    public $id;
 
     /**
      * Create a new event instance.
-     * @param $_userProfile
+     * @param $model
+     * @param $id
+     * @internal param $_userProfile
      */
-    public function __construct($_userProfile)
+    public function __construct($model, $id)
     {
-        $this->userProfile = [
-            'id' => $_userProfile->id,
-            'name' => $_userProfile->name,
-            'age' => $_userProfile->age,
-            'email' => $_userProfile->email
-
-        ];
+        $this->model = $model;
+        $this->id = $id;
     }
 
 }
