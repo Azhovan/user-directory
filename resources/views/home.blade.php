@@ -20,6 +20,7 @@
                                 </span>
                             </div>
                         </div>
+                        <br>
                         <div class="search-result"></div>
                     </div>
                 </div>

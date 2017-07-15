@@ -164,9 +164,9 @@ class UserService implements IService, IUser
 
             // search against all three fields
             $results = $model::search()->multiMatch([
-                IUser::FIELD_NAME,
-                IUser::FIELD_EMAIL,
-                IUser::FIELD_AGE
+                self::FIELD_NAME,
+                self::FIELD_EMAIL,
+                self::FIELD_AGE
             ], $term)->getRaw();
 
             // put data into elastic class
@@ -182,10 +182,10 @@ class UserService implements IService, IUser
             foreach ($elasticObject->hits() as $row) {
 
                 $searchResult[] = [
-                    'id' => $row['id'],
-                    'name' => $row['name'],
-                    'email' => $row['email'],
-                    'age' => $row['age'],
+                    'id' => $row['_source']['id'],
+                    'name' => $row['_source']['name'],
+                    'email' => $row['_source']['email'],
+                    'age' => $row['_source']['age'],
                     'score' => $row['_score']
                 ];
 
