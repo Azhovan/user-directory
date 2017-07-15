@@ -8,8 +8,6 @@
 
 namespace App\UserDirectory\Services\Validator;
 
-use Illuminate\Support\Facades\Validator;
-
 
 interface IValidate
 {

@@ -8,6 +8,7 @@
 
 namespace App\UserDirectory\Services\User;
 
+use App\Events\UserCreateOrUpdate;
 use App\UserDirectory\Exceptions\Validator\UserException;
 use App\UserDirectory\Models\User;
 use App\UserDirectory\Services\IService;
@@ -78,12 +79,20 @@ class UserService implements IService
 
         try {
 
-            return User::create([
+            $result = User::create([
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'age' => $data['age'],
                 'password' => bcrypt($data['password']),
             ]);
+
+            // Update Elastic search with new entry
+            $result->document()->save();
+
+            // broadcast event
+            // event(new UserCreateOrUpdate($result));
+
+            return $result;
 
         } catch (UserException $exception) {
 
@@ -116,7 +125,15 @@ class UserService implements IService
 
         try {
 
-            return User::where('id', Auth::id())->update($data);
+            $result = User::where('id', Auth::id())->update($data);
+
+            // Update Elastic search
+            User::where('id', Auth::id())->first()->document()->save();
+
+            // broadcast event if need
+            // event(new UserCreateOrUpdate($result));
+
+            return $result;
 
         } catch (UserException $exception) {
 
