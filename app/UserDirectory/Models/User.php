@@ -34,4 +34,5 @@ class User extends Authenticatable
      */
     public $syncDocument = false;
 
+
 }

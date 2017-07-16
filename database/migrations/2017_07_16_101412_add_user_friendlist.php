@@ -15,11 +15,17 @@ class AddUserFriendlist extends Migration
     {
         Schema::create('user_friends', function (Blueprint $table) {
             $table->increments('id');
-            // since i will search only for id , i just need to index user_id
-            // user_id is foreign key to users table id
+            // there are two cases
+            // search for user_id
+            // search for user_id and friend_id
+            // so i created 2 indexes ::
+            // 1. (user_id)
+            // 2. (user_id, friend_id)
             $table->integer('user_id')->unsigned();
             $table->index('user_id');
+
             $table->integer('friend_id');
+            $table->index(['friend_id', 'user_id']);
             $table->timestamps();
         });
 

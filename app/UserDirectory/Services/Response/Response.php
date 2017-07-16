@@ -33,6 +33,15 @@ class Response extends AbstractResponse
     }
 
     /**
+     * get the status of response
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->data;
+    }
+
+    /**
      * Apply logic for each strategy for handling the response
      * @return mixed
      * @internal param $response

@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\UserDirectory\Config\ExceptionsConstant;
+use App\UserDirectory\Exceptions\Validator\ElasticException;
 use App\UserDirectory\Models\User;
 use App\UserDirectory\Services\User\UserService;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use App\UserDirectory\Services\Validator\UserValidator;
 use App\UserDirectory\Services\Validator\ValidateFactory;
+use InvalidArgumentException;
+use Mockery\Exception;
 
 
 class RegisterController extends Controller
@@ -26,7 +30,6 @@ class RegisterController extends Controller
     /**
      * Create a new controller instance.
      *
-     * @return void
      */
     public function __construct()
     {
@@ -58,12 +61,19 @@ class RegisterController extends Controller
      *
      * @param  array $data
      * @return User
+     * @throws ElasticException
      */
     protected function create(array $data)
     {
-        return UserService::getInstance()->createUser($data);
+        try {
+            app('plastic')->connection();
+        } catch (InvalidArgumentException $exception) {
+            throw new ElasticException(ExceptionsConstant::ELASTIC_IS_NOT_ACCESSIBLE);
+        } catch (\Exception $exception) {
+            throw new Exception(ExceptionsConstant::ELASTIC_IS_NOT_ACCESSIBLE);
+        }
 
-        //TODO :  put new user in elastic
+        return UserService::getInstance()->createUser($data);
 
     }
 }

@@ -56,6 +56,11 @@ Route::group(['prefix' => 'home', 'middleware' => ['before' => 'auth']], functio
             'as' => 'profile.addFriend'
         ]);
 
+        Route::get('/friends', [
+            'uses' => 'Profile\ProfileController@friends',
+            'as' => 'profile.friends'
+        ]);
+
 
     });
 

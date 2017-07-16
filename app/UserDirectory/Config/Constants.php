@@ -26,5 +26,7 @@ interface Constants
 
     const ERROR = 'error';
 
+    const EMPTY_FRIEND_LIST ='You have not any friend in your list yet, be active a little bit !';
+
 
 }

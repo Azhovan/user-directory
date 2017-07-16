@@ -262,12 +262,30 @@ class UserService implements IService, IUser
         // is there this relation exist before
         $relationExist = UserFriend::where('user_id', $this->getUserId())
             ->where('friend_id', $friendId)->first();
-        if($relationExist)
+        if ($relationExist)
             return false;
 
         return true;
     }
 
+    /**
+     * find All friends related to current user
+     * @return bool|string
+     */
+    public function getCurrentUserFriends()
+    {
+        $result = User::whereIn(self::FIELD_ID, function ($query) {
+            $query->select('friend_id as id')
+                ->from('users')
+                ->join('user_friends', 'users.id', '=', 'user_friends.user_id')
+                ->where('users.id', $this->getUserId());
+        })->orderBy('created_at', 'DESC')->get();
+
+        if (null == $result)
+            return false;
+
+        return $result;
+    }
 
 
 }

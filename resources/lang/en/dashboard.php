@@ -10,4 +10,5 @@ return [
     'edit_profile' => 'Edit Your Profile',
     'view_profile' => 'Personal Page',
     'view_others' => 'You Wanna Make Friend ?',
+    'friends' => 'Friends List'
 ];

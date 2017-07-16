@@ -63,7 +63,6 @@ var UserDirectory = {
                     $('.modal-body').text('Please note that you cannot add yourself or you can just add every person one time !');
                     //$('.card').fadeIn('fast');
                 } else {
-                    console.log(config.error)
                     $('.modal-header').text('Great !');
                     $('.modal-title').text('user added to your list successfully .');
                     $('.modal-body').text('You successfully added this person .');

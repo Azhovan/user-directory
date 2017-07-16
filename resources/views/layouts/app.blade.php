@@ -66,6 +66,10 @@
                                 </li>
 
                                 <li>
+                                    <a href="{{ route('profile.friends') }}">@lang('dashboard.friends')</a>
+                                </li>
+
+                                <li>
                                     <a href="{{ route('profile.edit') }}">@lang('dashboard.edit_profile')</a>
                                 </li>
 

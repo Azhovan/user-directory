@@ -147,5 +147,19 @@ class ProfileController extends Controller
 
     }
 
+    /**
+     * show friend list page
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function friends()
+    {
+        $friends = UserService::getInstance()->getCurrentUserFriends();
+
+        return view('dashboard.profile.friendsList', [
+            'friends' => $friends
+        ]);
+
+    }
+
 
 }
