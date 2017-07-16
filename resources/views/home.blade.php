@@ -13,10 +13,12 @@
                         <div class="col-lg-12">
                             <div class="input-group">
                                 <div class="h4-responsive">You Can Search For Making New Friends !</div>
-                                <input type="text" class="form-control search-input" placeholder="Search with name | email | age ..." autofocus>
+                                <input type="text" class="form-control search-input"
+                                       placeholder="Search with name | email | age ..." autofocus>
                                 <input type="hidden" class="_token" name="_token" value="{{csrf_token()}}">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-success search" type="button">@lang('dashboard.search')</button>
+                                    <button class="btn btn-success search"
+                                            type="button">@lang('dashboard.search')</button>
                                 </span>
                             </div>
                         </div>
@@ -27,4 +29,7 @@
             </div>
         </div>
     </div>
+    <!-- Modal -->
+    @include('dashboard.modal.modal')
+
 @endsection

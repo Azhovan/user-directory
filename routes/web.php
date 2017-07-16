@@ -51,6 +51,12 @@ Route::group(['prefix' => 'home', 'middleware' => ['before' => 'auth']], functio
         ]);
 
 
+        Route::post('/addFriend', [
+            'uses' => 'Profile\ProfileController@addFriend',
+            'as' => 'profile.addFriend'
+        ]);
+
+
     });
 
 });

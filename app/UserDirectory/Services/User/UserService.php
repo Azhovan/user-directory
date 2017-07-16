@@ -12,9 +12,11 @@ use App\Events\UserCreateOrUpdate;
 use App\UserDirectory\Exceptions\Validator\ElasticException;
 use App\UserDirectory\Exceptions\Validator\UserException;
 use App\UserDirectory\Models\User;
+use App\UserDirectory\Models\UserFriend;
 use App\UserDirectory\Services\Elastic\Elastic;
 use App\UserDirectory\Services\IService;
 use App\UserDirectory\Services\IUser;
+use Illuminate\Database\Eloquent\MassAssignmentException;
 use Illuminate\Support\Facades\Auth;
 
 class UserService implements IService, IUser
@@ -70,6 +72,11 @@ class UserService implements IService, IUser
         //TODO : put information into memcache
         //TODO: check for user in memcache . if it is not in memcache load it from database
         $user = User::find($userId);
+
+        if (null === $user) {
+            return false;
+        }
+
         return json_decode($user);
     }
 
@@ -218,6 +225,49 @@ class UserService implements IService, IUser
     {
         return (new SearchableModelFactory())->getModel(self::ELASTIC_MODEL);
     }
+
+    /**
+     * @param $friendId
+     * @return $result
+     */
+    public function AddToFriendList($friendId)
+    {
+
+        try {
+
+            $result = UserFriend::create([
+                self::FIELD_USER_ID => $this->getUserId(),
+                self::FIELD_FRIEND_ID => $friendId
+            ]);
+
+            return $result;
+
+        } catch (MassAssignmentException $exception) {
+            throw $exception;
+        }
+
+    }
+
+
+    /**
+     * User cannot add himself/herself to his/her friend list !
+     * @param $friendId
+     * @return bool
+     */
+    public function checkFriendShip($friendId)
+    {
+        if ($this->getUserId() == $friendId)
+            return false;
+
+        // is there this relation exist before
+        $relationExist = UserFriend::where('user_id', $this->getUserId())
+            ->where('friend_id', $friendId)->first();
+        if($relationExist)
+            return false;
+
+        return true;
+    }
+
 
 
 }

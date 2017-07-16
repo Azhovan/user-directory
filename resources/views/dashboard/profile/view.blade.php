@@ -5,7 +5,9 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
-                    @if($profileType == \App\UserDirectory\Config\Constants::OTHER_PROFILE)
+                    @if(false == $profile)
+                        <p class="red-text">{{ \App\UserDirectory\Config\Constants::NO_MATCH  }}</p>
+                    @elseif($profileType == \App\UserDirectory\Config\Constants::OTHER_PROFILE)
                         @include('dashboard.profile.partial.other_user', array($profile))
                     @else
                         @include('dashboard.profile.partial.current_user', array($profile))

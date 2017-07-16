@@ -98,7 +98,9 @@
     // global app config
     var config = {
         routes: "{{ route('search') }}",
-        view_profile_route : "{{ route('profile.view') }}"
+        view_profile_route : "{{ route('profile.view') }}",
+        add_friend_route : "{{ route('profile.addFriend') }}",
+        error : "{{App\UserDirectory\Config\Constants::ERROR}}"
 
     };
 </script>

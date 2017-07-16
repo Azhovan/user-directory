@@ -30,11 +30,48 @@ var UserDirectory = {
                 '_token': token
             },
             success: function (data) {
-                console.log(data);
                 UserDirectory.parsData(data);
             }
         });
     },
+
+
+    /**
+     * add friend to user list
+     * @param id
+     * @param token
+     */
+    addFriend: function (id) {
+
+        if (!id || 0 === id.length) {
+            alert("Fatal Error. Cannot read the data")
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: config.add_friend_route,
+            cache: false,
+            data: {
+                "id": id,
+                "_token": $('._token').val()
+            },
+            success: function (data) {
+                var response = JSON.parse(data);
+                if (response.response.status == config.error) {
+                    $('.modal-header').text('Ops...');
+                    $('.modal-title').text('Your action failed');
+                    $('.modal-body').text('Please note that you cannot add yourself or you can just add every person one time !');
+                    //$('.card').fadeIn('fast');
+                } else {
+                    console.log(config.error)
+                    $('.modal-header').text('Great !');
+                    $('.modal-title').text('user added to your list successfully .');
+                    $('.modal-body').text('You successfully added this person .');
+                }
+            }
+        });
+    },
+
 
     /**
      * make data human readable and show in table
@@ -77,8 +114,8 @@ var UserDirectory = {
             rowDataName = $('<td></td>').text(data[i]['name']);
             rowDataEmail = $('<td></td>').text(data[i]['email']);
             rowDataAge = $('<td></td>').text(data[i]['age']);
-            rowDataAddFriend = $('<td><button class="btn btn-amber btn-sm add_friend" id=" ' + data[i]['id'] + ' "> Add as friend</button></td>');
-            rowDataViewProfile = $('<td><a href=" ' + url + '"><button class="btn btn-cyan btn-sm view_profile" id=" ' + data[i]['id'] + ' "> View Profile</button></a></td>');
+            rowDataAddFriend = $('<td><button class="btn btn-amber btn-sm add_friend" data-toggle="modal" data-target="#myModal" id=" ' + data[i]['id'] + ' "> Add as friend</button></td>');
+            rowDataViewProfile = $('<td><a href=" ' + url + '"><button class="btn btn-cyan btn-sm view_profile" id="' + data[i]['id'] + '"> View Profile</button></a></td>');
 
             row.append(rowDataRow);
             row.append(rowDataName);
@@ -91,8 +128,19 @@ var UserDirectory = {
         }
         table.append(tbody);
 
+        // output result
         $('.search-result').html('').append(table);
 
+        // binding
+        $('.add_friend').each(function (index, element) {
+            $(element).click(function () {
+                UserDirectory.addFriend(
+                    $(this).attr('id')
+                )
+
+            });
+
+        })
 
     }
 
@@ -108,5 +156,7 @@ $('.search').click(function () {
     );
 
 });
+
+
 
 

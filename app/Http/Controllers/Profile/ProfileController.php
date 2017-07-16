@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Profile;
 
 use App\UserDirectory\Config\Constants;
+use App\UserDirectory\Services\Response\Response;
 use App\UserDirectory\Services\User\UserService;
 use App\UserDirectory\Services\Validator\UserValidator;
 use App\UserDirectory\Services\Validator\ValidateFactory;
@@ -110,6 +111,40 @@ class ProfileController extends Controller
                 'update' => $update
             ]
         )->withErrors($validator->messages());
+    }
+
+
+    /**
+     * add friend to user friend list
+     * @param Request $request
+     * @return mixed
+     * @internal param $id
+     */
+    public function addFriend(Request $request)
+    {
+        $data = $request->all();
+
+        // error
+        if (empty($data['id']) || !isset($data['id'])) {
+            (new Response(Constants::ERROR))->handleResponse()->getResponseResult();
+        }
+
+        // check feasibility
+        if (
+            UserService::getInstance()->checkFriendShip($data['id']) &&
+            UserService::getInstance()->getUserById($data['id'])
+        ) {
+
+            $result = UserService::getInstance()->AddToFriendList($data['id']);
+
+            return (new Response($result))->getMapping()
+                ->handleResponse()->getResponseResult();
+        }
+
+        // error
+        return (new Response(Constants::ERROR))->handleResponse()->getResponseResult();
+
+
     }
 
 

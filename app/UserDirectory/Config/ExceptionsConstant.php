@@ -12,6 +12,6 @@ namespace App\UserDirectory\Config;
 class ExceptionsConstant
 {
 
-    const INVALID_PARAMETERS = 'Invalid Parameters. Check your inputs' ;
+    const INVALID_PARAMETERS = 'Invalid Parameters. PLease Check inputs' ;
 
 }
