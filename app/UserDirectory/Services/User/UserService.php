@@ -107,10 +107,10 @@ class UserService implements IService, IUser
         try {
 
             $result = User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'age' => $data['age'],
-                'password' => bcrypt($data['password']),
+                self::FIELD_NAME => $data[self::FIELD_NAME],
+                self::FIELD_EMAIL => $data[self::FIELD_EMAIL],
+                self::FIELD_AGE => $data[self::FIELD_AGE],
+                self::FIELD_PASSWD => bcrypt($data[self::FIELD_PASSWD]),
             ]);
 
             // Update Elastic search
@@ -145,13 +145,13 @@ class UserService implements IService, IUser
 
         if ($updatePassword) {
 
-            $data['password'] = bcrypt($data['password']);
+            $data[self::FIELD_PASSWD] = bcrypt($data[self::FIELD_PASSWD]);
 
         }
 
         try {
 
-            $result = User::where('id', Auth::id())->update($data);
+            $result = User::where(self::FIELD_ID, Auth::id())->update($data);
 
             // Update Elastic search
             // broadcast event
@@ -200,11 +200,11 @@ class UserService implements IService, IUser
             foreach ($elasticObject->hits() as $row) {
 
                 $searchResult[] = [
-                    'id' => $row['_source']['id'],
-                    'name' => $row['_source']['name'],
-                    'email' => $row['_source']['email'],
-                    'age' => $row['_source']['age'],
-                    'score' => $row['_score']
+                    self::FIELD_ID => $row[self::ELASTIC_SOURCE][self::FIELD_ID],
+                    self::FIELD_NAME => $row[self::ELASTIC_SOURCE][self::FIELD_NAME],
+                    self::FIELD_EMAIL => $row[self::ELASTIC_SOURCE][self::FIELD_EMAIL],
+                    self::FIELD_AGE => $row[self::ELASTIC_SOURCE][self::FIELD_AGE],
+                    self::FIELD_SCORE => $row[self::ELASTIC_SCORE]
                 ];
 
             }
@@ -260,8 +260,8 @@ class UserService implements IService, IUser
             return false;
 
         // is there this relation exist before
-        $relationExist = UserFriend::where('user_id', $this->getUserId())
-            ->where('friend_id', $friendId)->first();
+        $relationExist = UserFriend::where(self::FIELD_USER_ID, $this->getUserId())
+            ->where(self::FIELD_FRIEND_ID, $friendId)->first();
         if ($relationExist)
             return false;
 
