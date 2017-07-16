@@ -60,6 +60,23 @@ class UserService implements IService, IUser
 
     }
 
+    /**
+     * get user information by id
+     * @param $userId
+     * @return mixed
+     */
+    public function getUserById($userId)
+    {
+        //TODO : put information into memcache
+        //TODO: check for user in memcache . if it is not in memcache load it from database
+        $user = User::find($userId);
+        return json_decode($user);
+    }
+
+
+    /**
+     * @return int|null
+     */
     public function getUserId()
     {
         return Auth::id();
@@ -142,12 +159,6 @@ class UserService implements IService, IUser
 
         }
     }
-
-    public function getUserById($userId)
-    {
-
-    }
-
 
     /**
      * search against all fields in elastic

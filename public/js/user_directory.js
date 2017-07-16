@@ -44,7 +44,7 @@ var UserDirectory = {
 
         var data = JSON.parse(collection);
 
-        var table = $('<table></table>').addClass('"table table-hover"').css({width: "100%", margin :"30px"});
+        var table = $('<table></table>').addClass('"table table-hover"').css({width: "100%", "margin-top": "30"});
 
         var thead = $('<thead></thead>');
         var tr = $('<tr></tr>');
@@ -71,12 +71,14 @@ var UserDirectory = {
         for (var i = 0; i < data.length; i++) {
             row = $('<tr></tr>');
 
-            rowDataRow = $('<td width="50px"></td>').text((i + 1) );
+            url = config.view_profile_route + '/' + data[i]['id'];
+
+            rowDataRow = $('<td width="50px"></td>').text((i + 1));
             rowDataName = $('<td></td>').text(data[i]['name']);
             rowDataEmail = $('<td></td>').text(data[i]['email']);
             rowDataAge = $('<td></td>').text(data[i]['age']);
             rowDataAddFriend = $('<td><button class="btn btn-amber btn-sm add_friend" id=" ' + data[i]['id'] + ' "> Add as friend</button></td>');
-            rowDataViewProfile = $('<td><button class="btn btn-cyan btn-sm view_profile" id=" ' + data[i]['id'] + ' "> View Profile</button></td>');
+            rowDataViewProfile = $('<td><a href=" ' + url + '"><button class="btn btn-cyan btn-sm view_profile" id=" ' + data[i]['id'] + ' "> View Profile</button></a></td>');
 
             row.append(rowDataRow);
             row.append(rowDataName);

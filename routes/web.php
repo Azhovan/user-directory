@@ -35,7 +35,7 @@ Route::group(['prefix' => 'home', 'middleware' => ['before' => 'auth']], functio
 
     Route::group(['prefix' => 'profile'], function () {
 
-        Route::get('/view', [
+        Route::get('/view/{id?}', [
             'uses' => 'Profile\ProfileController@view',
             'as' => 'profile.view'
         ]);

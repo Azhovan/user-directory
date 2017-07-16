@@ -97,7 +97,8 @@
 <script>
     // global app config
     var config = {
-        routes: "{{ route('search') }}"
+        routes: "{{ route('search') }}",
+        view_profile_route : "{{ route('profile.view') }}"
 
     };
 </script>

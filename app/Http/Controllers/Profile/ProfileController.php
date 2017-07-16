@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Profile;
 
+use App\UserDirectory\Config\Constants;
 use App\UserDirectory\Services\User\UserService;
 use App\UserDirectory\Services\Validator\UserValidator;
 use App\UserDirectory\Services\Validator\ValidateFactory;
@@ -27,12 +28,28 @@ class ProfileController extends Controller
     private $profile;
 
     /**
-     * view profile
+     * @var string
+     */
+    private $profileType;
+
+    /**
+     * view profile current user and the others
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function view()
+    public function view(Request $request, $id = null)
     {
-        return view('dashboard.profile.view');
+        $profile = UserService::getInstance()->getCurrentUser();
+        $this->profileType = Constants::CURRENT_PROFILE;
+
+        if (isset($id) && !empty($id)) {
+            $profile = UserService::getInstance()->getUserById($id);
+            $this->profileType = Constants::OTHER_PROFILE;
+        }
+
+        return view('dashboard.profile.view', [
+            'profile' => $profile,
+            'profileType' => $this->profileType
+        ]);
     }
 
     /**
@@ -82,7 +99,7 @@ class ProfileController extends Controller
             new UserValidator($this->profile, $this->roles)
         );
 
-        $update = null ;
+        $update = null;
         if (!$validator->fails()) {
             $update = UserService::getInstance()->updateUser($this->profile, $this->shouldUpdatePassword);
         }
@@ -94,10 +111,6 @@ class ProfileController extends Controller
             ]
         )->withErrors($validator->messages());
     }
-
-
-
-
 
 
 }
