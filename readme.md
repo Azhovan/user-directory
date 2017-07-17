@@ -1,9 +1,9 @@
 
-**User Directory Project** 
 
+**User Directory Project**
+--------------------------
 
-----------
-
+ 
 *NOTE* : 
 since this is a laravel project, all instructions for install laravel need to be performed [Laravel Instruction](https://laravel.com/docs/5.4#configuration)
 
@@ -16,6 +16,7 @@ Please use below instruction :
  5. set your memcache configuration (/app/config/cache.php)
  6. set elasticsearch configuration (/app/config/plastic.php)
  7. set your session mechanism (/app/config/session.php)
+**Befor up an run the application Elastic Search should be runned** 
 
 *NOTE* :
 you may use .env file for your setting (except elasticsearch setting) . 
