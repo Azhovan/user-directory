@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\UserDirectory\Config\Messages;
-use App\UserDirectory\Services\Response\Response;
 use App\UserDirectory\Services\User\UserService;
 use Illuminate\Http\Request;
 
@@ -47,12 +46,9 @@ class HomeController extends Controller
             return Messages::ERROR_REQUEST;
         }
 
-        $result = UserService::getInstance()->search($param['term']);
-        if (false === $result)
-            return (new Response($result))->getMapping()
-                ->handleResponse()->getResponseResult();
+        UserService::getInstance()->search($param['term']);
 
-        return ($result);
+        return UserService::getInstance()->getSearchResult();
 
     }
 }

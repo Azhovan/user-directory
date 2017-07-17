@@ -31,12 +31,12 @@ var UserDirectory = {
             },
             success: function (data) {
                 var response = JSON.parse(data);
-                if (typeof response.response.status !== 'undefined')
-                    if (response.response.status == config.error) {
-                        alert("Your search did not match any documents");
-                    } else {
-                        UserDirectory.parsData(data);
-                    }
+
+                if (response.status == config.error) {
+                    alert("Your search did not match any documents");
+                } else {
+                    UserDirectory.parsData(response.response);
+                }
             }
         });
     },
@@ -84,7 +84,7 @@ var UserDirectory = {
      */
     parsData: function (collection) {
 
-        var data = JSON.parse(collection);
+        var data = collection;
 
         var table = $('<table></table>').addClass('"table table-hover"').css({width: "100%", "margin-top": "30"});
 

@@ -31,6 +31,11 @@ class UserService implements IService, IUser
     private static $instance;
 
     /**
+     * @var array
+     */
+    private $searchResult;
+
+    /**
      * UserService constructor.
      */
     private function __construct()
@@ -215,7 +220,7 @@ class UserService implements IService, IUser
 
             // there is no match
             if ($elasticObject->totalHits() == 0) {
-                return false;
+                return $this->setSearchResult([], Constants::ERROR);
             }
 
             // loop all search results
@@ -232,7 +237,7 @@ class UserService implements IService, IUser
 
             }
 
-            return json_encode($searchResult);
+            return $this->setSearchResult($searchResult, Constants::SUCCESS);
 
         } catch (ElasticException $exception) {
             throw $exception;
@@ -310,6 +315,30 @@ class UserService implements IService, IUser
             return false;
 
         return $result;
+    }
+
+    /**
+     * get the search result
+     * @return array
+     */
+    public function getSearchResult()
+    {
+        return json_encode($this->searchResult);
+    }
+
+    /**
+     * @param $data
+     * @param $status
+     * @return bool
+     */
+    public function setSearchResult($data, $status)
+    {
+        $this->searchResult = [
+            Constants::STATUS => $status,
+            Constants::RESPONSE => $data
+        ];
+
+        return true;
     }
 
 
