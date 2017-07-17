@@ -6,7 +6,7 @@
  * Time: 1:45 PM
  */
 
-namespace app\UserDirectory\Services\Response;
+namespace App\UserDirectory\Services\Response;
 
 
 use App\UserDirectory\Config\Constants;

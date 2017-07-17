@@ -3,8 +3,10 @@
 namespace App\Listeners;
 
 use App\Events\UserCreateOrUpdate;
+use App\UserDirectory\Config\Constants;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Cache;
 
 class UpdateElastic implements ShouldQueue
 {
@@ -24,7 +26,12 @@ class UpdateElastic implements ShouldQueue
     {
         $model = $event->model;
 
+        // save user in elastic search
         $model::where('id', $event->id)->first()->document()->save();
+
+        // save user data in Memcache
+        // the Memcache data is always updated (at Create | Update user functions )
+        Cache::put($event->id, serialize($model::where('id', $event->id)->first()), Constants::MEMCACHE_TIME_TO_LIVE) ;
     }
 
     /**

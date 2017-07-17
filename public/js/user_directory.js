@@ -30,7 +30,13 @@ var UserDirectory = {
                 '_token': token
             },
             success: function (data) {
-                UserDirectory.parsData(data);
+                var response = JSON.parse(data);
+                if (typeof response.response.status !== 'undefined')
+                    if (response.response.status == config.error) {
+                        alert("Your search did not match any documents");
+                    } else {
+                        UserDirectory.parsData(data);
+                    }
             }
         });
     },

@@ -9,6 +9,7 @@
 namespace App\UserDirectory\Services\User;
 
 use App\Events\UserCreateOrUpdate;
+use App\UserDirectory\Config\Constants;
 use App\UserDirectory\Exceptions\Validator\ElasticException;
 use App\UserDirectory\Exceptions\Validator\UserException;
 use App\UserDirectory\Models\User;
@@ -18,6 +19,8 @@ use App\UserDirectory\Services\IService;
 use App\UserDirectory\Services\IUser;
 use Illuminate\Database\Eloquent\MassAssignmentException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use UnexpectedValueException;
 
 class UserService implements IService, IUser
 {
@@ -55,10 +58,24 @@ class UserService implements IService, IUser
     {
         if (!$loadFromCache) {
             $user = User::find(Auth::user()->id);
+
+            // put updated information in Cache
+            Cache::put($this->getUserId(), serialize($user), Constants::MEMCACHE_TIME_TO_LIVE);
+
             return json_decode($user);
         }
 
-        return Auth::user();
+        // load data from cache
+        // if it exist in Memcache
+        if (Cache::has($this->getUserId())) {
+            return unserialize(Cache::get($this->getUserId()));
+        }
+
+        // if does not exist
+        $user = Auth::user();
+        Cache::put($this->getUserId(), serialize($user), Constants::MEMCACHE_TIME_TO_LIVE);
+
+        return $user;
 
     }
 
@@ -69,13 +86,20 @@ class UserService implements IService, IUser
      */
     public function getUserById($userId)
     {
-        //TODO : put information into memcache
-        //TODO: check for user in memcache . if it is not in memcache load it from database
+
+        // if user exist in cache
+        if (Cache::has($userId)) {
+            return unserialize(Cache::get($userId));
+        }
+
         $user = User::find($userId);
 
         if (null === $user) {
             return false;
         }
+
+        // user exist so :: we can update the cache and return it
+        Cache::put($userId, serialize($userId), Constants::MEMCACHE_TIME_TO_LIVE);
 
         return json_decode($user);
     }
@@ -184,7 +208,6 @@ class UserService implements IService, IUser
             $results = $model::search()->multiMatch([
                 self::FIELD_NAME,
                 self::FIELD_EMAIL,
-                self::FIELD_AGE
             ], $term)->getRaw();
 
             // put data into elastic class
@@ -212,6 +235,8 @@ class UserService implements IService, IUser
             return json_encode($searchResult);
 
         } catch (ElasticException $exception) {
+            throw $exception;
+        } catch (UnexpectedValueException $exception) {
             throw $exception;
         }
 
