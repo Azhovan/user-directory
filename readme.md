@@ -16,6 +16,7 @@ Please use below instruction :
  5. set your memcache configuration (/app/config/cache.php)
  6. set elasticsearch configuration (/app/config/plastic.php)
  7. set your session mechanism (/app/config/session.php)
+ 8. Run **php artisan migrate** to create all database tables
 
 ----------
 
