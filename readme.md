@@ -32,14 +32,14 @@ Main Module wroted for this project is **UserDirectory** which is contain below 
 
 ----------
  - **Services** **: contain all business logic as below :**
- - **Services/Elastic** : responsible of parsing the data which comes from elasticSearch server
- - **Services/Response** :  responsible to generate response based on different strategy .
+ - **Services/Elastic** :  parsing the data which comes from elasticSearch server
+ - **Services/Response** : generate response based on different strategy .
  - **Services/User** : all services related to user and its actions like searchable models, interaction with cache, search , ... 
  - **Services/Validator** :  all strategies for validate inputes goes here .
  - **Services/IService , ISearch, IUser** : parent  abstract classes | interfaces which are used by other components 
 
 ----------
-**Events :**  when user is registered or it's data updated proper event will called for index the data and update the Cache mechanism .
+**Events :**  when user is registered or it's data updated,  proper event will triggered for indexing the data and update the Cached data .
 
 **controllers** : can be found at : 
  - /app/Http/Controllers/
