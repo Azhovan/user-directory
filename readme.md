@@ -13,15 +13,18 @@ Please use below instruction :
  2.  apply proper permissions to framework folders
  3. run composer install && composer update
  4. set your database configuration (/app/config/database.php)
- 5. set your memcache configuration (/app/config/cache.php)
+ 5. set your memcached configuration (/app/config/cache.php)
  6. set elasticsearch configuration (/app/config/plastic.php)
  7. set your session mechanism (/app/config/session.php)
  8. Run **php artisan migrate** to create all database tables
  9. Run **php artisan key:generate**
+ 
 
 ----------
 
-**Befor up an run the application Elastic Search should be runned** 
+**Befor up an run the application Elastic Search should be runned**
+** pluggins : **
+1. memcached
 
 *NOTE* :
 you may use .env file for your setting (except elasticsearch setting) . 
