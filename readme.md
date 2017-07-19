@@ -23,8 +23,9 @@ Please use below instruction :
 ----------
 
 **Befor up an run the application Elastic Search should be runned**
-** pluggins : **
-1. memcached
+
+**Make sure you installed the memcached extention**
+  
 
 *NOTE* :
 you may use .env file for your setting (except elasticsearch setting) . 
